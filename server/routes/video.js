@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const { Video } = require("../models/Video");
+const { Video } = require("../models/Video");
 
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
@@ -46,11 +46,40 @@ router.post("/uploadfiles", (req, res) => {
   });
 });
 
+router.post("/getVideoDetail", (req, res) => {
+  Video.findOne({ _id: req.body.videoId })
+    .populate("writer")
+    .exec((err, video) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({ success: true, video });
+    });
+});
+
+router.post("/uploadVideo", (req, res) => {
+  const video = new Video(req.body);
+  console.log(video);
+  video.save((err, doc) => {
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({ success: true });
+  });
+});
+
+router.get("/getVideos", (req, res) => {
+  //모든 Video 가져오기
+  //writer 모든 정보 가져오려면 populate
+  Video.find()
+    .populate("writer")
+    .exec((err, videos) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({ success: true, videos });
+    });
+});
+
 router.post("/thumbnail", (req, res) => {
   //썸네일 생성, 비디오 러닝타임 가져오기
 
-  let filePath = ""
-  let fileDuration = ""
+  let filePath = "";
+  let fileDuration = "";
 
   //비디오 정보 가져오기
   ffmpeg.ffprobe(req.body.url, function (err, metadata) {
