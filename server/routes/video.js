@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Video } = require("../models/Video");
+const { Subscriber } = require("../models/Subscriber");
 
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
@@ -73,6 +74,29 @@ router.get("/getVideos", (req, res) => {
       if (err) return res.status(400).send(err);
       res.status(200).json({ success: true, videos });
     });
+});
+
+router.get("/getSubscriptionVideos", (req, res) => {
+  // 자신의 아이디로 구독하는 사람 찾기
+  Subscriber.find({ userFrom: req.query.userFrom }).exec(
+    (err, subscriberInfo) => {
+      if (err) return res.status(400).send(err);
+
+      let subscribedUser = [];
+
+      // 내가 구독하는 사람들 담기
+      subscriberInfo.map((subscriber, i) => {
+        subscribedUser.push(subscriber.userTo);
+      });
+      // 찾은 사람들의 비디오 가져오기
+      Video.find({ writer: { $in: subscribedUser } })
+        .populate("writer") //writer의 모든 정보, 즉 User의 모든 정보 가져오기
+        .exec((err, videos) => {
+          if (err) return res.status(400).send(err);
+          res.status(200).json({ success: true, videos, subscriberInfo, subscribedUser});
+        });
+    }
+  );
 });
 
 router.post("/thumbnail", (req, res) => {
