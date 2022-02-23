@@ -27,7 +27,7 @@ router.post("/subscribed", (req, res) => {
       result = true;
     }
 
-    res.status(200).json({ success: true, subcribed: result });
+    res.status(200).json({ success: true, subscribed: result });
   });
 });
 

@@ -19,10 +19,16 @@ function Subscribe(props) {
       userTo: props.userTo,
       userFrom: localStorage.getItem("userId"),
     }; //로그인하면 localstorage에 내 userId 올라가있음.
+
+    console.log(subscribedVariable.userTo)
+    console.log(subscribedVariable.userFrom)
+
     axios
       .post("/api/subscribe/subscribed", subscribedVariable)
       .then((response) => {
         if (response.data.success) {
+          console.log(response.data.success)
+          console.log(response.data.subscribed)
           setSubscribed(response.data.subscribed);
         } else {
           alert("정보를 받아오지 못했습니다.");
@@ -31,33 +37,36 @@ function Subscribe(props) {
   }, []);
 
   const onSubscribe = () => {
-
     let subscribedVariable = {
       userTo: props.userTo,
-      userFrom: props.userFrom
-    }
+      userFrom: props.userFrom,
+    };
 
     //이미 구독중
-    if(Subscribed) {
-      axios.post('/api/subscribe/unSubscribe', subscribedVariable).then(response => {
-        if(response.data.success) {
-          setSubscribeNumber(SubscribeNumber -1 )
-          setSubscribed(!Subscribed)
-        } else {
-          alert('구독 취소 실패')
-        }
-      })
+    if (Subscribed) {
+      axios
+        .post("/api/subscribe/unSubscribe", subscribedVariable)
+        .then((response) => {
+          if (response.data.success) {
+            setSubscribeNumber(SubscribeNumber - 1);
+            setSubscribed(!Subscribed);
+          } else {
+            alert("구독 취소 실패");
+          }
+        });
     } else {
-      axios.post('/api/subscribe/subscribe', subscribedVariable).then(response => {
-        if(response.data.success) {
-          setSubscribeNumber(SubscribeNumber +1 )
-          setSubscribed(!Subscribed)
-        } else {
-          alert('구독 실패')
-        }
-      })
+      axios
+        .post("/api/subscribe/subscribe", subscribedVariable)
+        .then((response) => {
+          if (response.data.success) {
+            setSubscribeNumber(SubscribeNumber + 1);
+            setSubscribed(!Subscribed);
+          } else {
+            alert("구독 실패");
+          }
+        });
     }
-  }
+  };
 
   return (
     <div>
