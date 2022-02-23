@@ -15,11 +15,13 @@ function SubscriptionPage() {
     //const userFrom = localStorage.getItem("userId")
 
     axios
-      .get("/api/video/getSubscriptionVideos", {params: subscriptionVariables} )
+      .get("/api/video/getSubscriptionVideos", {
+        params: subscriptionVariables,
+      })
       .then((response) => {
         if (response.data.success) {
-            console.log(response.data.subscriberInfo)
-            console.log(response.data.subscribedUser)
+          console.log(response.data.subscriberInfo);
+          console.log(response.data.subscribedUser);
 
           setVideos(response.data.videos);
         } else {

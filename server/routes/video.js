@@ -93,7 +93,9 @@ router.get("/getSubscriptionVideos", (req, res) => {
         .populate("writer") //writer의 모든 정보, 즉 User의 모든 정보 가져오기
         .exec((err, videos) => {
           if (err) return res.status(400).send(err);
-          res.status(200).json({ success: true, videos, subscriberInfo, subscribedUser});
+          res
+            .status(200)
+            .json({ success: true, videos, subscriberInfo, subscribedUser });
         });
     }
   );
