@@ -14,13 +14,13 @@ function ReplyComment(props) {
       }
     });
     setChildCommentNumber(commentNumber);
-  }, [props.commentLists ]);
+  }, [props.commentLists]);
 
-  const renderReplyComment = (parentCommentId) => 
+  const renderReplyComment = (parentCommentId) =>
     props.commentLists.map((comment, index) => (
       <React.Fragment key={index}>
         {comment.responseTo === parentCommentId && (
-          <div style={{ width: '80%', marginLeft: '40px' }}>
+          <div style={{ width: "80%", marginLeft: "40px" }}>
             <SingleComment
               comment={comment}
               postId={props.postId}

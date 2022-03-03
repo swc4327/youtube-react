@@ -4,7 +4,7 @@ import axios from "axios";
 import SideVideo from "./Sections/SideVideo";
 import Subscribe from "./Sections/Subscribe";
 import Comments from "./Sections/Comments";
-
+import LikeDislikes from "./Sections/LikeDislikes";
 
 //Video 정보 가져오기
 //댓글 리스트 가져오기 -> CommentLists -> 상태관리, Comments Component에 내려주기 / 자식 컴포넌트에서 댓글 달면 refreshFunction으로 넘겨줘서 CommentLists의 상태값 바꿔줌.
@@ -16,8 +16,8 @@ function VideoDetailPage(props) {
   const [CommentLists, setCommentLists] = useState([]);
 
   const videoVariable = {
-    videoId: videoId
-}
+    videoId: videoId,
+  };
 
   useEffect(() => {
     axios.post("/api/video/getVideoDetail", variable).then((response) => {
@@ -29,10 +29,10 @@ function VideoDetailPage(props) {
     });
 
     //비디오에 포함된 모든 댓글 가지고 오기
-    console.log("#######")
+    console.log("#######");
     axios.post("/api/comment/getComments", videoVariable).then((response) => {
       if (response.data.success) {
-        console.log('######################')
+        console.log("######################");
         console.log("response.data.comments", response.data.comments);
         setCommentLists(response.data.comments);
       } else {
@@ -42,8 +42,8 @@ function VideoDetailPage(props) {
   }, []);
 
   const refreshFunction = (newComment) => {
-    setCommentLists(CommentLists.concat(newComment))
-  }
+    setCommentLists(CommentLists.concat(newComment));
+  };
 
   if (VideoDetail.writer) {
     const subscribeButton = VideoDetail.writer._id !==
@@ -64,7 +64,7 @@ function VideoDetailPage(props) {
               controls
             />
 
-            <List.Item actions={[subscribeButton]}>
+            <List.Item actions={[<LikeDislikes video userId={localStorage.getItem('userId')} videoId={videoId}/>, subscribeButton]}>
               <List.Item.Meta
                 avatar={<Avatar src={VideoDetail.writer.image} />}
                 title={VideoDetail.writer.name}
@@ -72,7 +72,11 @@ function VideoDetailPage(props) {
               />
             </List.Item>
 
-            <Comments refreshFunction={refreshFunction} commentLists={CommentLists} postId={videoId} />
+            <Comments
+              refreshFunction={refreshFunction}
+              commentLists={CommentLists}
+              postId={videoId}
+            />
           </div>
         </Col>
 

@@ -9,7 +9,7 @@ const { TextArea } = Input;
 // 댓글 세세한것은 여기서 붙임.
 function Comments(props) {
   const user = useSelector((state) => state.user); // 1.
-  const videoId = props.postId
+  const videoId = props.postId;
 
   const [Comment, setComment] = useState("");
 
@@ -37,9 +37,6 @@ function Comments(props) {
     });
   };
 
-
-
-
   return (
     <div>
       <br />
@@ -58,8 +55,6 @@ function Comments(props) {
                   postId={props.postId}
                   refreshFunction={props.refreshFunction}
                 />
-
-
 
                 <ReplyComment
                   commentLists={props.commentLists}
